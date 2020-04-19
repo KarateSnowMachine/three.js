@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset=UTF-8 />
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+  </head>
+  <body>
+    <script src="three.min.js"></script>
+    <script src="js/controls/OrbitControls.js"></script>
+    
+		<script>
+let scene, camera, renderer;
+let mirrorSphere;
+let controls;
+let clock;
+
+    var positions = [];
+    var n_particles = 1000;
+  var positions_arr;
+    var points_geom = new THREE.BufferGeometry();
+
+let colors = [];
+let velocities = [];
+
+function init() {
+  renderer = new THREE.WebGLRenderer({antialias:true});
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(55,window.innerWidth/window.innerHeight, 45, 30000);
+  camera.position.set(0,4,1000);
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.autoRotate = true;
+  //controls.target = THREE.Vector3(0,0,0);
+  //controls.rotateSpeed = 0.1;
+  //controls.enableZoom = false;
+  controls.addEventListener('change', renderer);
+ var axesHelper = new THREE.AxesHelper( 5 );
+  scene.add( axesHelper );
+
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  document.body.appendChild(renderer.domElement);
+  let loader = new THREE.TextureLoader();
+  let ambientLight = new THREE.AmbientLight(0xafafaf);
+  scene.add(ambientLight);
+
+  loader.load("holdme.jpg", function(texture) {
+    let source_geom = new THREE.PlaneBufferGeometry(500,500);
+    let source_mat = new THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide});
+    let source_mesh = new THREE.Mesh( source_geom, source_mat);
+    source_mesh.rotation.y = Math.PI/2;
+    source_mesh.position.x = -180;
+    scene.add(source_mesh)
+
+    let sink_geom = new THREE.PlaneBufferGeometry(500,500);
+    let sink_mat = new THREE.MeshBasicMaterial({color: 0x0aaaaf, side: THREE.DoubleSide, alpha: 0.3});
+    let sink_mesh = new THREE.Mesh( sink_geom, sink_mat);
+    sink_mesh.rotation.y = Math.PI/2;
+    sink_mesh.position.x = 180;
+    scene.add(sink_mesh)
+
+    for (var i=0; i<n_particles; ++i) {
+      velocities.push(Math.random());
+      var x = Math.random() * 360 - 180 + 1;
+      var y = 250 - Math.random() * 500;
+      var z = 250 - Math.random() * 500;
+      positions.push(x,y,z);
+      var r = Math.random()*2;
+      var g = Math.random()*1
+      var b = Math.random()*10;
+
+      colors.push(r,g,b);
+    }
+     positions_arr = new THREE.Float32BufferAttribute(positions, 3);
+    points_geom.setAttribute('position', positions_arr);
+    points_geom.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+    points_geom.computeBoundingSphere();
+
+    var material = new THREE.PointsMaterial( {size:5, vertexColors: THREE.VertexColors});
+    points = new THREE.Points(points_geom, material);
+    scene.add(points);
+
+    clock = new THREE.Clock();
+    animate();
+
+  });
+}
+
+function animate() {
+  var time_delta = clock.getDelta();
+  for (var i=0; i<n_particles*3; i+=3) {
+    v_idx = i/3;
+    dp = velocities[v_idx] * time_delta;
+    points_geom.attributes.position.array[i+0] += dp*100;
+    if (points_geom.attributes.position.array[i+0] > 180) {
+      points_geom.attributes.position.array[i+0] = -179;
+    }
+  }
+    points_geom.attributes.position.needsUpdate = true;
+
+  renderer.render(scene, camera);
+  requestAnimationFrame(animate);
+  controls.update();
+}
+
+init();
+
+		</script>
+</body>
+</html>
+

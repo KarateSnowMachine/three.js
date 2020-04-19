@@ -48,7 +48,7 @@
 
 			import Stats from './jsm/libs/stats.module.js';
 
-			var SEPARATION = 100, AMOUNTX = 50, AMOUNTY = 50;
+			var SEPARATION = 100, AMOUNTX = 100, AMOUNTY = 50;
 
 			var container, stats;
 			var camera, scene, renderer;
@@ -106,7 +106,7 @@
 				var material = new THREE.ShaderMaterial( {
 
 					uniforms: {
-						color: { value: new THREE.Color( 0xffffff ) },
+						color: { value: new THREE.Color( 0x00ffff ) },
 					},
 					vertexShader: document.getElementById( 'vertexshader' ).textContent,
 					fragmentShader: document.getElementById( 'fragmentshader' ).textContent
@@ -214,7 +214,7 @@
 						positions[ i + 1 ] = ( Math.sin( ( ix + count ) * 0.3 ) * 50 ) +
 										( Math.sin( ( iy + count ) * 0.5 ) * 50 );
 
-						scales[ j ] = ( Math.sin( ( ix + count ) * 0.3 ) + 1 ) * 8 +
+						scales[ j ] = ( Math.sin( ( ix + count ) * 0.3 ) + 1 ) * 18 +
 										( Math.sin( ( iy + count ) * 0.5 ) + 1 ) * 8;
 
 						i += 3;

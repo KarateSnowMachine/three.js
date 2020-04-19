@@ -55,7 +55,7 @@
 
 				//
 
-				var triangles = 5000;
+				var triangles = 5500;
 
 				var geometry = new THREE.BufferGeometry();
 
@@ -65,8 +65,8 @@
 
 				var color = new THREE.Color();
 
-				var n = 800, n2 = n / 2;	// triangles spread in the cube
-				var d = 120, d2 = d / 2;	// individual triangle size
+				var n = 100, n2 = n / 2;	// triangles spread in the cube
+				var d = 190, d2 = d / 2;	// individual triangle size
 
 				var pA = new THREE.Vector3();
 				var pB = new THREE.Vector3();
@@ -164,7 +164,7 @@
 				geometry.computeBoundingSphere();
 
 				var material = new THREE.MeshPhongMaterial( {
-					color: 0xaaaaaa, specular: 0xffffff, shininess: 250,
+					color: 0xaaaaaa, specular: 0xffffff, shininess: 10,
 					side: THREE.DoubleSide, vertexColors: THREE.VertexColors
 				} );
 
@@ -237,13 +237,15 @@
 
 				var time = Date.now() * 0.001;
 
-				mesh.rotation.x = time * 0.15;
-				mesh.rotation.y = time * 0.25;
+				mesh.rotation.x = time * 0.00;
+				mesh.rotation.y = time * 0.15;
+        var meshPosition = mesh.geometry.attributes.position;
+        mesh.geometry.attributes.position = meshPosition;
 
 				raycaster.setFromCamera( mouse, camera );
 
-				var intersects = raycaster.intersectObject( mesh );
-
+				//var intersects = raycaster.intersectObject( mesh );
+/*
 				if ( intersects.length > 0 ) {
 
 					var intersect = intersects[ 0 ];
@@ -268,7 +270,7 @@
 					line.visible = false;
 
 				}
-
+*/
 				renderer.render( scene, camera );
 
 			}
